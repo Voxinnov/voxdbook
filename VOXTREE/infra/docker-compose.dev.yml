@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # Development overrides for backend
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: base
+    command: npm run dev
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: mysql://voxtree:voxtreepassword@mysql:3306/voxtree
+    ports:
+      - "3001:3001"
+      - "9229:9229"  # Debug port
+    stdin_open: true
+    tty: true
+
+  # Development overrides for frontend
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      target: deps
+    command: npm run dev
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_BASE_URL: http://localhost:3001/api
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+
+  # Development overrides for MySQL
+  mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: voxtree_dev
+      MYSQL_USER: voxtree
+      MYSQL_PASSWORD: voxtreepassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_dev_data:/var/lib/mysql
+
+  # Development overrides for Redis
+  redis:
+    ports:
+      - "6379:6379"
+
+  # Development overrides for Adminer
+  adminer:
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_dev_data:
+    driver: local

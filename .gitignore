@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+.npm
+dist/
+build/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env*
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Database & Testing
+*.db
+*.sqlite
+*.sqlite3
+coverage/
+.nyc_output/
+
+# Flutter specific
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/SmartDaybook/app/build/
+/SmartDaybook/app/.metadata
+/SmartDaybook/app/app.iml
+/SmartDaybook/app/devices.txt
+/SmartDaybook/app/emulators.txt
+
+# Python specific
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Mac specific
+.DS_Store
+._*

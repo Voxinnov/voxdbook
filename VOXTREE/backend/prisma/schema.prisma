@@ -1,0 +1,297 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  passwordHash String
+  roleId       Int
+  role         Role      @relation(fields: [roleId], references: [id])
+  isFreelancer Boolean   @default(false)
+  hourlyRate   Float? 
+  // Employee management fields
+  phone        String?
+  address      String?
+  employeeType String?   // 'permanent' or 'freelance'
+  salary       Float?    // For permanent employees
+  currency     String?   @default("INR") // 'INR', 'USD', 'GBP'
+  position     String?
+  department   String?
+  startDate    DateTime?
+  endDate      DateTime?
+  status       String    @default("active") // 'active', 'inactive', 'terminated'
+  skills       String?   // JSON array of skills
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  projects     Project[]
+  tasks        Task[]
+  TimeEntry    TimeEntry[]
+  TaskAssignment TaskAssignment[]
+  Comment      Comment[]
+  uploadedFiles File[]
+  refreshTokens RefreshToken[]
+  passwordResets PasswordReset[]
+  createdInvoices Invoice[]
+  recordedPayments Payment[]
+  notifications Notification[]
+  createdMilestones Milestone[]
+  createdQuotations Quotation[]
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  desc  String?
+  users User[]
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  clientName  String?
+  budget      Float?
+  currency    String   @default("INR")
+  status      String   @default("planning")
+  startDate   DateTime?
+  endDate     DateTime?
+  createdById Int
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  modules     Module[]
+  milestones  Milestone[]
+  invoices    Invoice[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Module {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  status      String   @default("planning")
+  startDate   DateTime?
+  endDate     DateTime?
+  projectId   Int
+  project     Project  @relation(fields: [projectId], references: [id])
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Milestone {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  status      String   @default("planning") // planning, in_progress, completed, cancelled
+  priority    String   @default("medium") // low, medium, high, critical
+  startDate   DateTime?
+  endDate     DateTime?
+  dueDate     DateTime?
+  progress    Int      @default(0) // 0-100 percentage
+  projectId   Int
+  project     Project  @relation(fields: [projectId], references: [id])
+  createdById Int
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Task {
+  id           Int      @id @default(autoincrement())
+  title        String
+  description  String?
+  moduleId     Int
+  module       Module   @relation(fields: [moduleId], references: [id])
+  milestoneId  Int?
+  milestone    Milestone? @relation(fields: [milestoneId], references: [id])
+  estimateHours Float?
+  priority     String   @default("medium")
+  dueDate      DateTime?
+  status       String   @default("todo")
+  createdById  Int
+  createdBy    User     @relation(fields: [createdById], references: [id])
+  assignments  TaskAssignment[]
+  timeEntries  TimeEntry[]
+  comments     Comment[]
+  files        File[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model TaskAssignment {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  userId    Int
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model TimeEntry {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  userId    Int
+  startTime DateTime
+  endTime   DateTime?
+  durationMins Int?
+  notes     String?
+  billed    Boolean @default(false)
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Invoice {
+  id          Int      @id @default(autoincrement())
+  projectId   Int
+  project     Project  @relation(fields: [projectId], references: [id])
+  clientJson  String?
+  amount      Float
+  currency    String   @default("INR")
+  dueDate     DateTime?
+  status      String   @default("draft")
+  lineItems   String?  // JSON string for line items
+  fromDate    DateTime?
+  toDate      DateTime?
+  createdById Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  payments    Payment[]
+  createdBy   User     @relation(fields: [createdById], references: [id])
+}
+
+model Payment {
+  id          Int      @id @default(autoincrement())
+  invoiceId   Int
+  amount      Float
+  method      String
+  notes       String?
+  recordedById Int
+  createdAt   DateTime @default(now())
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
+  recordedBy  User     @relation(fields: [recordedById], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  taskId    Int
+  userId    Int
+  isSystem  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  task      Task     @relation(fields: [taskId], references: [id])
+}
+
+model File {
+  id          Int      @id @default(autoincrement())
+  filename    String
+  originalName String
+  mimeType    String
+  size        Int
+  path        String
+  taskId      Int
+  uploadedById Int
+  createdAt   DateTime @default(now())
+  task        Task     @relation(fields: [taskId], references: [id])
+  uploadedBy  User     @relation(fields: [uploadedById], references: [id])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  revoked   Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordReset {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  message   String
+  type      String   @default("info") // info, success, warning, error
+  read      Boolean  @default(false)
+  data      String?  // JSON data for additional context
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Quotation {
+  id                    Int      @id @default(autoincrement())
+  projectName           String
+  clientName            String
+  platform             String   // 'Web' | 'Android' | 'iOS' | 'All'
+  projectType           String   // 'Website' | 'Mobile App' | 'CRM' | 'LMS' | 'E-commerce' | 'Custom'
+  description           String?
+
+  // Development modules (JSON array)
+  developmentModules    String   // JSON array of modules with hours and rates
+
+  // Cost breakdown
+  totalDeveloperCost    Float
+  totalDesignerCost     Float
+  totalTesterCost       Float
+  totalDevelopmentCost  Float
+
+  // Additional costs
+  infrastructureCost    Float    @default(0)
+  designBrandingCost    Float    @default(0)
+  projectManagementPct  Float    @default(0) // percentage
+  commissionPct         Float    @default(0) // percentage
+  profitMarginPct       Float    @default(0) // percentage
+  gstPct                Float    @default(18) // percentage
+
+  // Auto-calculated totals
+  subtotal              Float
+  projectManagementCost Float
+  commissionCost        Float
+  profitMarginCost      Float
+  gstAmount             Float
+  totalAmount           Float
+
+  // Metadata
+  status                String   @default("draft") // 'draft' | 'sent' | 'accepted' | 'rejected' | 'expired'
+  validUntil            DateTime?
+  createdById           Int
+  createdBy             User     @relation(fields: [createdById], references: [id])
+  modules               QuotationModule[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model QuotationModule {
+  id           Int      @id @default(autoincrement())
+  quotationId  Int
+  quotation    Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  moduleName   String
+  developerHours Float
+  designerHours  Float
+  testerHours    Float
+  developerRate  Float
+  designerRate   Float
+  testerRate     Float
+  total         Float
+  createdAt     DateTime @default(now())
+}
+

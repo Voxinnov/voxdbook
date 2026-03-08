@@ -1,0 +1,141 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  passwordHash String
+  roleId       Int
+  role         Role      @relation(fields: [roleId], references: [id])
+  isFreelancer Boolean   @default(false)
+  hourlyRate   Float? 
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  TimeEntry    TimeEntry[]
+  TaskAssignment TaskAssignment[]
+  Comment      Comment[]
+  files        File[]
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  desc  String?
+  users User[]
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  title       String
+  client      String?
+  description String?
+  budget      Float?
+  status      String   @default("planning")
+  startDate   DateTime?
+  endDate     DateTime?
+  createdBy   Int
+  modules     Module[]
+  invoices    Invoice[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Module {
+  id        Int     @id @default(autoincrement())
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id])
+  title     String
+  description String?
+  tasks     Task[]
+}
+
+model Task {
+  id           Int      @id @default(autoincrement())
+  moduleId     Int
+  module       Module   @relation(fields: [moduleId], references: [id])
+  title        String
+  description  String?
+  status       String   @default("todo")
+  priority     String?
+  estimateHours Float?
+  dueDate      DateTime?
+  assignments  TaskAssignment[]
+  timeEntries  TimeEntry[]
+  comments     Comment[]
+  files        File[]
+}
+
+model TaskAssignment {
+  id        Int   @id @default(autoincrement())
+  taskId    Int
+  userId    Int
+  assignedBy Int
+  assignedAt DateTime @default(now())
+  task      Task  @relation(fields: [taskId], references: [id])
+  user      User  @relation(fields: [userId], references: [id])
+}
+
+model TimeEntry {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  userId    Int
+  startTime DateTime
+  endTime   DateTime?
+  durationMins Int?
+  notes     String?
+  billed    Boolean @default(false)
+  task      Task     @relation(fields: [taskId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Invoice {
+  id        Int    @id @default(autoincrement())
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id])
+  clientJson Json?
+  amount    Float
+  currency  String @default("INR")
+  dueDate   DateTime?
+  status    String @default("draft")
+  payments  Payment[]
+  createdAt DateTime @default(now())
+}
+
+model Payment {
+  id        Int    @id @default(autoincrement())
+  invoiceId Int
+  amount    Float
+  method    String
+  paidAt    DateTime @default(now())
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  userId    Int
+  body      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  task      Task     @relation(fields: [taskId], references: [id])
+}
+
+model File {
+  id       Int     @id @default(autoincrement())
+  taskId   Int
+  userId   Int
+  filename String
+  path     String
+  mime     String
+  size     Int
+  createdAt DateTime @default(now())
+  task     Task @relation(fields: [taskId], references: [id])
+  user     User @relation(fields: [userId], references: [id])
+}
