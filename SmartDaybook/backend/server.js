@@ -7,6 +7,8 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const taskRoutes = require('./routes/taskRoutes');
+const renewalRoutes = require('./routes/renewalRoutes');
+const reminderRoutes = require('./routes/reminderRoutes');
 const adminCategoryRoutes = require('./routes/adminCategoryRoutes');
 const adminUserRoutes = require('./routes/adminUserRoutes');
 const adminStatsRoutes = require('./routes/adminStatsRoutes');
@@ -24,6 +26,8 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/todos', todoRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/renewals', renewalRoutes);
+app.use('/api/reminders', reminderRoutes);
 
 // Admin routes
 app.use('/api/admin/categories', adminCategoryRoutes);

@@ -187,3 +187,69 @@ export interface TimesheetEntry {
   totalMinutes: number;
   totalAmount: number;
 }
+
+export interface QuotationModule {
+  moduleName: string;
+  developerHours: number;
+  designerHours: number;
+  testerHours: number;
+  developerRate: number;
+  designerRate: number;
+  testerRate: number;
+  total: number;
+}
+
+export interface Quotation {
+  id: number;
+  projectName: string;
+  projectType: string;
+  clientName: string;
+  platform: string;
+  description?: string;
+  status: 'draft' | 'sent' | 'accepted' | 'rejected' | 'expired';
+  modules: QuotationModule[];
+  totalDevelopmentCost: number;
+  infrastructureCost: number;
+  designBrandingCost: number;
+  projectManagementPct: number;
+  projectManagementCost: number;
+  commissionPct: number;
+  commissionCost: number;
+  profitMarginPct: number;
+  profitMarginCost: number;
+  subtotal: number;
+  gstPct: number;
+  gstAmount: number;
+  totalAmount: number;
+  validUntil?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateQuotationData {
+  projectName: string;
+  clientName: string;
+  platform: 'Web' | 'Android' | 'iOS' | 'All';
+  projectType: 'Website' | 'Mobile App' | 'CRM' | 'LMS' | 'E-commerce' | 'Custom';
+  description?: string;
+  developmentModules: QuotationModule[];
+  infrastructureCost: number;
+  designBrandingCost: number;
+  projectManagementPct: number;
+  commissionPct: number;
+  profitMarginPct: number;
+  gstPct: number;
+  validUntil?: string;
+}
+
+export interface QuotationFilters {
+  page?: number;
+  limit?: number;
+  status?: string;
+  search?: string;
+}
+
+export interface QuotationListResponse {
+  quotations: Quotation[];
+  pagination: Pagination;
+}

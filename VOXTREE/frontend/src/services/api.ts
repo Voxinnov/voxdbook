@@ -1,5 +1,14 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { AuthTokens, LoginRequest, LoginResponse, ApiResponse } from '../types';
+import {
+  AuthTokens,
+  LoginRequest,
+  LoginResponse,
+  ApiResponse,
+  Quotation,
+  QuotationFilters,
+  QuotationListResponse,
+  CreateQuotationData
+} from '../types';
 
 class ApiClient {
   private client: AxiosInstance;
@@ -13,7 +22,7 @@ class ApiClient {
 
   constructor() {
     this.client = axios.create({
-      baseURL: (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3001/api',
+      baseURL: (import.meta as any).env?.VITE_API_BASE_URL || '/api',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -86,7 +95,7 @@ class ApiClient {
         resolve(token);
       }
     });
-    
+
     this.failedQueue = [];
   }
 
@@ -95,7 +104,7 @@ class ApiClient {
       throw new Error('No refresh token available');
     }
 
-    const baseURL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:3001/api';
+    const baseURL = (import.meta as any).env?.VITE_API_BASE_URL || '/api';
     const response = await axios.post(`${baseURL}/auth/refresh`, {
       refreshToken: this.refreshToken,
     });
@@ -108,7 +117,7 @@ class ApiClient {
   private loadTokensFromStorage() {
     const accessToken = localStorage.getItem('accessToken');
     const refreshToken = localStorage.getItem('refreshToken');
-    
+
     if (accessToken && refreshToken) {
       this.setTokens(accessToken, refreshToken);
     }
@@ -132,11 +141,11 @@ class ApiClient {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     const response = await this.client.post<ApiResponse<LoginResponse['data']>>('/auth/login', credentials);
     const { data } = response.data;
-    
+
     if (data) {
       this.setTokens(data.accessToken, data.refreshToken);
     }
-    
+
     return response.data as LoginResponse;
   }
 
@@ -150,7 +159,7 @@ class ApiClient {
         console.error('Logout error:', error);
       }
     }
-    
+
     this.clearTokens();
   }
 
@@ -173,6 +182,31 @@ class ApiClient {
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.delete<ApiResponse<T>>(url, config);
     return response.data.data as T;
+  }
+
+  // Quotation methods
+  async getQuotations(filters: QuotationFilters): Promise<QuotationListResponse> {
+    const response = await this.client.get<ApiResponse<QuotationListResponse>>('/quotations', { params: filters });
+    return response.data.data as QuotationListResponse;
+  }
+
+  async createQuotation(data: CreateQuotationData): Promise<Quotation> {
+    const response = await this.client.post<ApiResponse<Quotation>>('/quotations', data);
+    return response.data.data as Quotation;
+  }
+
+  async updateQuotation(id: number, data: any): Promise<Quotation> {
+    const response = await this.client.put<ApiResponse<Quotation>>(`/quotations/${id}`, data);
+    return response.data.data as Quotation;
+  }
+
+  async deleteQuotation(id: number): Promise<void> {
+    await this.client.delete<ApiResponse<void>>(`/quotations/${id}`);
+  }
+
+  async duplicateQuotation(id: number): Promise<Quotation> {
+    const response = await this.client.post<ApiResponse<Quotation>>(`/quotations/${id}/duplicate`);
+    return response.data.data as Quotation;
   }
 
   // Check if user is authenticated

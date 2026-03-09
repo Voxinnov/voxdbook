@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS transactions (
  id INT AUTO_INCREMENT PRIMARY KEY,
  user_id INT,
  category_id INT,
+ classification ENUM('personal', 'official') DEFAULT 'official',
  amount DECIMAL(10,2),
  type ENUM('income','expense','credit','debit'),
  payment_method VARCHAR(50),

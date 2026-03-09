@@ -1,13 +1,13 @@
 import React, { useState, memo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Home, 
-  FolderOpen, 
-  CheckSquare, 
-  Clock, 
-  FileText, 
-  Bell, 
-  User, 
+import {
+  Home,
+  FolderOpen,
+  CheckSquare,
+  Clock,
+  FileText,
+  Bell,
+  User,
   LogOut,
   Menu,
   X,
@@ -18,7 +18,10 @@ import {
   Calculator,
   ArrowRightLeft,
   ListChecks,
-  Tag
+  Tag,
+  Smartphone,
+  RefreshCw,
+  BellRing
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useProduct } from '../hooks/useProduct';
@@ -47,14 +50,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Time Tracking', href: '/time-tracking', icon: Clock },
     { name: 'Invoices', href: '/invoices', icon: FileText },
     { name: 'Notifications', href: '/notifications', icon: Bell },
+    { name: 'Mobile App', href: '/download', icon: Smartphone },
   ];
 
   const voxdbookNavigation = [
     { name: 'Dashboard', href: '/voxdbook', icon: Home },
     { name: 'Transactions', href: '/voxdbook/transactions', icon: ArrowRightLeft },
+    { name: 'Renewal Reminder', href: '/voxdbook/renewals', icon: RefreshCw },
+    { name: 'Reminder', href: '/voxdbook/reminders', icon: BellRing },
     { name: 'Tasks', href: '/voxdbook/tasks', icon: CheckSquare },
     { name: 'Quick Todos', href: '/voxdbook/todos', icon: ListChecks },
     { name: 'Categories', href: '/voxdbook/categories', icon: Tag },
+    { name: 'Mobile App', href: '/download', icon: Smartphone },
   ];
 
   const navigation = activeProduct === 'voxtree' ? voxtreeNavigation : voxdbookNavigation;
@@ -110,11 +117,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   navigate('/');
                   setSidebarOpen(false);
                 }}
-                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                  activeProduct === 'voxtree' 
-                    ? 'bg-white text-primary-600 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${activeProduct === 'voxtree'
+                  ? 'bg-white text-primary-600 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+                  }`}
               >
                 VOXTREE
               </button>
@@ -124,11 +130,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   navigate('/voxdbook');
                   setSidebarOpen(false);
                 }}
-                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                  activeProduct === 'voxdbook' 
-                    ? 'bg-white text-indigo-600 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${activeProduct === 'voxdbook'
+                  ? 'bg-white text-indigo-600 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+                  }`}
               >
                 VOXdBOOK
               </button>
@@ -141,11 +146,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                    isActive
-                      ? 'bg-primary-100 text-primary-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`}
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive
+                    ? 'bg-primary-100 text-primary-900'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
                   onClick={() => setSidebarOpen(false)}
                 >
                   <item.icon className="mr-3 h-5 w-5" />
@@ -153,7 +157,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </Link>
               );
             })}
-            
+
             {/* Admin Section */}
             {(user?.role?.name === 'Founder' || user?.role?.name === 'ProjectManager' || user?.name === 'System Administrator') && (
               <>
@@ -167,11 +171,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                        isActive
-                          ? 'bg-primary-100 text-primary-900'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }`}
+                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive
+                        ? 'bg-primary-100 text-primary-900'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`}
                       onClick={() => setSidebarOpen(false)}
                     >
                       <item.icon className="mr-3 h-5 w-5" />
@@ -209,24 +212,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   setActiveProduct('voxtree');
                   navigate('/');
                 }}
-                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                  activeProduct === 'voxtree' 
-                    ? 'bg-white text-primary-600 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${activeProduct === 'voxtree'
+                  ? 'bg-white text-primary-600 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+                  }`}
               >
                 VOXTREE
               </button>
-               <button
+              <button
                 onClick={() => {
                   setActiveProduct('voxdbook');
                   navigate('/voxdbook');
                 }}
-                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${
-                  activeProduct === 'voxdbook' 
-                    ? 'bg-white text-indigo-600 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-700'
-                }`}
+                className={`flex-1 py-1.5 text-xs font-semibold rounded-md transition-all ${activeProduct === 'voxdbook'
+                  ? 'bg-white text-indigo-600 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
+                  }`}
               >
                 VOXdBOOK
               </button>
@@ -239,18 +240,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                    isActive
-                      ? 'bg-primary-100 text-primary-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`}
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive
+                    ? 'bg-primary-100 text-primary-900'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
                 >
                   <item.icon className="mr-3 h-5 w-5" />
                   {item.name}
                 </Link>
               );
             })}
-            
+
             {/* Admin Section */}
             {(user?.role?.name === 'Founder' || user?.role?.name === 'ProjectManager' || user?.name === 'System Administrator') && (
               <>
@@ -264,11 +264,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     <Link
                       key={item.name}
                       to={item.href}
-                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                        isActive
-                          ? 'bg-primary-100 text-primary-900'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }`}
+                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive
+                        ? 'bg-primary-100 text-primary-900'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`}
                     >
                       <item.icon className="mr-3 h-5 w-5" />
                       {item.name}

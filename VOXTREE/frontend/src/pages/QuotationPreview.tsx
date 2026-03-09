@@ -1,21 +1,98 @@
 import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Quotation } from '../types';
+import { apiClient } from '../services/api';
+import { PDFService } from '../services/pdfService';
+import { EmailService } from '../services/emailService';
+import toast from 'react-hot-toast';
 
 interface QuotationPreviewProps {
-  quotation: Quotation;
-  onClose: () => void;
-  onDownloadPDF: () => void;
-  onShareEmail: () => void;
-  onAttachToProject: () => void;
+  quotation?: Quotation;
+  onClose?: () => void;
+  onDownloadPDF?: () => void;
+  onShareEmail?: () => void;
+  onAttachToProject?: () => void;
 }
 
 const QuotationPreview: React.FC<QuotationPreviewProps> = ({
-  quotation,
-  onClose,
-  onDownloadPDF,
-  onShareEmail,
-  onAttachToProject
+  quotation: initialQuotation,
+  onClose: initialOnClose,
+  onDownloadPDF: initialOnDownloadPDF,
+  onShareEmail: initialOnShareEmail,
+  onAttachToProject: initialOnAttachToProject
 }) => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+
+  const { data: fetchedQuotation, isLoading, error } = useQuery<Quotation>({
+    queryKey: ['quotation', id],
+    queryFn: () => apiClient.get<Quotation>(`/quotations/${id}`),
+    enabled: !!id && !initialQuotation,
+  });
+
+  const quotation = initialQuotation || fetchedQuotation;
+
+  const handleClose = initialOnClose || (() => {
+    navigate('/quotations');
+  });
+
+  const handleDownloadPDF = initialOnDownloadPDF || (async () => {
+    if (quotation) {
+      try {
+        await PDFService.generateQuotationPDF(quotation);
+        toast.success('PDF generated successfully');
+      } catch (err) {
+        toast.error('Failed to generate PDF');
+      }
+    }
+  });
+
+  const handleShareEmail = initialOnShareEmail || (async () => {
+    if (quotation) {
+      try {
+        await EmailService.shareQuotationViaEmail(quotation, {
+          to: '',
+          subject: `Quotation for ${quotation.projectName}`,
+          body: ''
+        });
+      } catch (err) {
+        toast.error('Failed to share via email');
+      }
+    }
+  });
+
+  const handleAttachToProject = initialOnAttachToProject || (() => {
+    toast.success('This feature will be available soon');
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error || (!quotation && !isLoading)) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Quotation not found</h2>
+          <p className="text-gray-600 mb-4">The quotation you're looking for doesn't exist or you don't have permission to view it.</p>
+          <button
+            onClick={() => navigate('/quotations')}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          >
+            Back to Quotations
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!quotation) return null;
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -54,7 +131,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({
         {/* Header Actions */}
         <div className="mb-6 flex justify-between items-center">
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="flex items-center text-gray-600 hover:text-gray-900"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,19 +141,19 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({
           </button>
           <div className="flex space-x-3">
             <button
-              onClick={onDownloadPDF}
+              onClick={handleDownloadPDF}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Download PDF
             </button>
             <button
-              onClick={onShareEmail}
+              onClick={handleShareEmail}
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               Share via Email
             </button>
             <button
-              onClick={onAttachToProject}
+              onClick={handleAttachToProject}
               className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
             >
               Attach to Project
@@ -141,7 +218,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({
                   {quotation.validUntil && (
                     <p><strong>Valid Until:</strong> {formatDate(quotation.validUntil)}</p>
                   )}
-                  <p><strong>Status:</strong> 
+                  <p><strong>Status:</strong>
                     <span className={`ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(quotation.status)}`}>
                       {quotation.status.toUpperCase()}
                     </span>

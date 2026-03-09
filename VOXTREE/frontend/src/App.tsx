@@ -27,6 +27,7 @@ import Timesheet from './pages/Timesheet';
 import InvoiceHistory from './pages/InvoiceHistory';
 import Notifications from './pages/Notifications';
 import UsersAdmin from './pages/UsersAdmin';
+import DownloadApp from './pages/DownloadApp';
 
 // VOXdBOOK Pages
 import SmartDashboard from './pages/VOXdBOOK/Dashboard';
@@ -34,6 +35,8 @@ import SmartTransactions from './pages/VOXdBOOK/Transactions';
 import SmartTasks from './pages/VOXdBOOK/Tasks';
 import SmartTodos from './pages/VOXdBOOK/Todos';
 import SmartCategories from './pages/VOXdBOOK/Categories';
+import SmartRenewals from './pages/VOXdBOOK/Renewals';
+import SmartReminders from './pages/VOXdBOOK/Reminders';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -64,287 +67,311 @@ const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
+            {/* Public routes */}
+            <Route path="/login" element={<Login />} />
 
-          {/* Protected routes with Layout */}
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DashboardPage />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            {/* Protected routes with Layout */}
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <DashboardPage />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/projects"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <Projects />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/projects"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Projects />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/projects/page"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <ProjectsPage />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/projects/page"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <ProjectsPage />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/projects/:id"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <ProjectDetail />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/projects/:id"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <ProjectDetail />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/projects/create"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <CreateProject />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/projects/create"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <CreateProject />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/tasks"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <Tasks />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/tasks"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Tasks />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/tasks/create"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <CreateTask />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/tasks/create"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <CreateTask />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/documentation"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <Documentation />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/documentation"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Documentation />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/documentation/:id"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <DocumentDetail />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/documentation/:id"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <DocumentDetail />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/quotations"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <Quotations />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/quotations"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Quotations />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/quotations/settings"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <QuotationSettings />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/quotations/settings"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <QuotationSettings />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/quotations/:id/preview"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <QuotationPreview />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/quotations/:id/preview"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <QuotationPreview />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/milestones"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <MilestoneManagement />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/milestones"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <MilestoneManagement />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/employees"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <EmployeeManagement />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/employees"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <EmployeeManagement />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/time-tracking"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <Timesheet />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/time-tracking"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Timesheet />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/invoices"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <InvoiceHistory />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/invoices"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <InvoiceHistory />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/notifications"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <Notifications />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/notifications"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Notifications />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
 
-          <Route
-            path="/admin/users"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <UsersAdmin />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/voxdbook"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <SmartDashboard />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/voxdbook/transactions"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <SmartTransactions />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/voxdbook/tasks"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <SmartTasks />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/voxdbook/todos"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <SmartTodos />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/voxdbook/categories"
-            element={
-              <PrivateRoute>
-                <Layout>
-                  <SmartCategories />
-                </Layout>
-              </PrivateRoute>
-            }
-          />
+            <Route
+              path="/admin/users"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <UsersAdmin />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <SmartDashboard />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/transactions"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <SmartTransactions />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/tasks"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <SmartTasks />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/todos"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <SmartTodos />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/categories"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <SmartCategories />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/renewals"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <SmartRenewals />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/reminders"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <SmartReminders />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/download"
+              element={<DownloadApp />}
+            />
 
 
-          {/* Catch all - redirect to dashboard */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#363636',
-            color: '#fff',
-          },
-          success: {
-            duration: 3000,
-            iconTheme: {
-              primary: '#10b981',
-              secondary: '#fff',
-            },
-          },
-          error: {
+            {/* Catch all - redirect to dashboard */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+        <Toaster
+          position="top-right"
+          toastOptions={{
             duration: 4000,
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
+            style: {
+              background: '#363636',
+              color: '#fff',
             },
-          },
-        }}
-      />
+            success: {
+              duration: 3000,
+              iconTheme: {
+                primary: '#10b981',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              duration: 4000,
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
       </QueryClientProvider>
     </ErrorBoundary>
   );

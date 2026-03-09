@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // Reaching existing backend
+  baseURL: '/daybook-api/api', // Reaching existing backend
   headers: {
     'Content-Type': 'application/json',
   },

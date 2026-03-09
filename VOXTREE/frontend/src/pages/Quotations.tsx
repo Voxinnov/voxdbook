@@ -4,7 +4,7 @@ import { apiClient } from '../services/api';
 import QuotationForm from '../components/QuotationForm';
 import QuotationFormTabs from '../components/QuotationFormTabsSimple';
 import QuotationPDF from '../components/QuotationPDF';
-// import QuotationPreview from './QuotationPreview';
+import QuotationPreview from './QuotationPreview';
 // import { PDFService } from '../services/pdfService';
 // import { EmailService } from '../services/emailService';
 
@@ -469,26 +469,25 @@ const Quotations: React.FC = () => {
                     >
                       Previous
                     </button>
-                    
+
                     {Array.from({ length: Math.min(5, pagination.pages) }, (_, i) => {
                       const pageNum = Math.max(1, pagination.page - 2) + i;
                       if (pageNum > pagination.pages) return null;
-                      
+
                       return (
                         <button
                           key={pageNum}
                           onClick={() => handlePageChange(pageNum)}
-                          className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                            pageNum === pagination.page
+                          className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${pageNum === pagination.page
                               ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
                               : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                          }`}
+                            }`}
                         >
                           {pageNum}
                         </button>
                       );
                     })}
-                    
+
                     <button
                       onClick={() => handlePageChange(pagination.page + 1)}
                       disabled={pagination.page >= pagination.pages}
@@ -514,20 +513,13 @@ const Quotations: React.FC = () => {
 
       {/* Preview Page */}
       {showPreview && previewQuotation && (
-        <div className="min-h-screen bg-gray-50 py-8">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-white shadow-lg rounded-lg p-8">
-              <h1 className="text-2xl font-bold mb-4">Quotation Preview</h1>
-              <p className="text-gray-600 mb-4">Preview functionality will be implemented here.</p>
-              <button
-                onClick={handleClosePreview}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                Close Preview
-              </button>
-            </div>
-          </div>
-        </div>
+        <QuotationPreview
+          quotation={previewQuotation}
+          onClose={handleClosePreview}
+          onDownloadPDF={handleDownloadPDF}
+          onShareEmail={handleShareEmail}
+          onAttachToProject={handleAttachToProject}
+        />
       )}
     </div>
   );

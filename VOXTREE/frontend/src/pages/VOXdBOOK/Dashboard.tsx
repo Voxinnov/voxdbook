@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Wallet, 
+import {
+  TrendingUp,
+  TrendingDown,
+  Wallet,
   Calendar,
   ArrowRight
 } from 'lucide-react';
@@ -11,10 +11,11 @@ import api from '../../services/smartApi';
 interface Transaction {
   id: number;
   type: 'income' | 'expense';
+  classification: 'personal' | 'official';
   amount: number | string;
   description: string;
   category_name?: string;
-  date: string;
+  transaction_date: string;
 }
 
 interface Task {
@@ -67,7 +68,7 @@ const Dashboard: React.FC = () => {
       .filter(tx => tx.type === 'expense')
       .reduce((sum, tx) => sum + Number(tx.amount), 0);
     const pendingTasks = data.tasks.filter(t => t.status !== 'completed').length;
-    
+
     return {
       totalIncome: income,
       totalExpense: expense,
@@ -144,14 +145,14 @@ const Dashboard: React.FC = () => {
             <h3 className="text-lg font-bold text-gray-900">Budget Health</h3>
             <span className="text-sm text-gray-500">{stats.totalIncome > 0 ? Math.round((stats.totalExpense / stats.totalIncome) * 100) : 0}% used</span>
           </div>
-          
+
           <div className="h-4 bg-gray-100 rounded-full overflow-hidden mb-8">
-            <div 
-              className="h-full bg-indigo-500 transition-all duration-1000 ease-out" 
-              style={{ 
-                width: stats.totalIncome > 0 
-                  ? `${Math.min((stats.totalExpense / stats.totalIncome) * 100, 100)}%` 
-                  : stats.totalExpense > 0 ? '100%' : '0%' 
+            <div
+              className="h-full bg-indigo-500 transition-all duration-1000 ease-out"
+              style={{
+                width: stats.totalIncome > 0
+                  ? `${Math.min((stats.totalExpense / stats.totalIncome) * 100, 100)}%`
+                  : stats.totalExpense > 0 ? '100%' : '0%'
               }}
             ></div>
           </div>
@@ -164,7 +165,13 @@ const Dashboard: React.FC = () => {
               ) : recentTransactions.map(tx => (
                 <div key={tx.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-transparent hover:border-gray-100 transition-all">
                   <div className={`w-2 h-2 rounded-full ${tx.type === 'income' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  <span className="text-sm text-gray-700 flex-1">{tx.description}</span>
+                  <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                    <span className="text-sm text-gray-700 font-medium">{tx.description}</span>
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full uppercase font-bold tracking-wider ${tx.classification === 'personal' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'
+                      }`}>
+                      {tx.classification}
+                    </span>
+                  </div>
                   <span className={`text-sm font-bold ${tx.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
                     {tx.type === 'income' ? '+' : '-'}₹{Number(tx.amount).toLocaleString()}
                   </span>
@@ -184,10 +191,9 @@ const Dashboard: React.FC = () => {
               <p className="text-gray-400 text-sm">No pending tasks</p>
             ) : upcomingTasks.map(task => (
               <div key={task.id} className="flex gap-4 items-start p-3 rounded-lg bg-gray-50 border border-transparent hover:border-gray-100 transition-all">
-                <div className={`w-1 h-10 rounded-full mt-1 ${
-                  task.priority === 'high' ? 'bg-red-500' : 
+                <div className={`w-1 h-10 rounded-full mt-1 ${task.priority === 'high' ? 'bg-red-500' :
                   task.priority === 'medium' ? 'bg-indigo-500' : 'bg-green-500'
-                }`}></div>
+                  }`}></div>
                 <div>
                   <h4 className="text-sm font-bold text-gray-900">{task.title}</h4>
                   <p className="text-xs text-gray-500">{new Date(task.due_date).toLocaleDateString()}</p>

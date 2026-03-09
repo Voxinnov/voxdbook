@@ -1,5 +1,5 @@
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -207,7 +207,7 @@ model File {
 
 model RefreshToken {
   id        Int      @id @default(autoincrement())
-  token     String   @unique
+  token     String   @unique @db.VarChar(512)
   userId    Int
   revoked   Boolean  @default(false)
   expiresAt DateTime
@@ -217,7 +217,7 @@ model RefreshToken {
 
 model PasswordReset {
   id        Int      @id @default(autoincrement())
-  token     String   @unique
+  token     String   @unique @db.VarChar(512)
   userId    Int
   expiresAt DateTime
   used      Boolean  @default(false)
