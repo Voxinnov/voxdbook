@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Receipt, 
-  CheckSquare, 
-  ListTodo, 
+import {
+  LayoutDashboard,
+  Receipt,
+  CheckSquare,
+  ListTodo,
   Tag,
   LogOut,
   User,
@@ -26,6 +26,8 @@ const Sidebar = () => {
     { title: 'Transactions', path: '/transactions', icon: <Receipt size={20} /> },
     { title: 'Tasks', path: '/tasks', icon: <CheckSquare size={20} /> },
     { title: 'Todos', path: '/todos', icon: <ListTodo size={20} /> },
+    { title: 'Diet Planner', path: '/diet-planner', icon: <CheckSquare size={20} /> },
+    { title: 'Day Planner', path: '/day-planner', icon: <CheckSquare size={20} /> },
     { title: 'Categories', path: '/categories', icon: <Tag size={20} /> },
   ];
 
@@ -40,9 +42,9 @@ const Sidebar = () => {
 
       <nav className="sidebar-nav">
         {menuItems.map((item) => (
-          <NavLink 
-            key={item.path} 
-            to={item.path} 
+          <NavLink
+            key={item.path}
+            to={item.path}
             className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}
           >
             {item.icon}
@@ -88,8 +90,9 @@ const AppLayout = () => {
           <Outlet />
         </div>
       </main>
-      
-      <style dangerouslySetInnerHTML={{ __html: `
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .app-layout {
           display: flex;
           min-height: 100vh;

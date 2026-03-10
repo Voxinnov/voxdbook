@@ -21,11 +21,15 @@ import {
   Tag,
   Smartphone,
   RefreshCw,
-  BellRing
+  BellRing,
+  Lightbulb,
+  Utensils,
+  Car
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useProduct } from '../hooks/useProduct';
 import TimeTracker from './TimeTracker';
+import GlobalReminder from './GlobalReminder';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -60,7 +64,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Reminder', href: '/voxdbook/reminders', icon: BellRing },
     { name: 'Tasks', href: '/voxdbook/tasks', icon: CheckSquare },
     { name: 'Quick Todos', href: '/voxdbook/todos', icon: ListChecks },
+    { name: 'Notes', href: '/voxdbook/notes', icon: Lightbulb },
+    { name: 'Diet Planner', href: '/voxdbook/diet-planner', icon: Utensils },
+    { name: 'Day Planner', href: '/voxdbook/day-planner', icon: Clock },
+    { name: 'Goal Tracker', href: '/voxdbook/goal-tracker', icon: Target },
     { name: 'Categories', href: '/voxdbook/categories', icon: Tag },
+    { name: 'Vehicle Management', href: '/voxdbook/vehicle-management', icon: Car },
     { name: 'Mobile App', href: '/download', icon: Smartphone },
   ];
 
@@ -326,6 +335,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </main>
       </div>
+      <GlobalReminder />
     </div>
   );
 };

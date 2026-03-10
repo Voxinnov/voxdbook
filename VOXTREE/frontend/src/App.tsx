@@ -37,6 +37,11 @@ import SmartTodos from './pages/VOXdBOOK/Todos';
 import SmartCategories from './pages/VOXdBOOK/Categories';
 import SmartRenewals from './pages/VOXdBOOK/Renewals';
 import SmartReminders from './pages/VOXdBOOK/Reminders';
+import DietPlanner from './pages/VOXdBOOK/DietPlanner/index';
+import DayPlanner from './pages/VOXdBOOK/DayPlanner/index';
+import Notes from './pages/VOXdBOOK/Notes';
+import VehicleManagement from './pages/VOXdBOOK/VehicleManagement';
+import GoalTracker from './pages/VOXdBOOK/GoalTracker';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -319,6 +324,36 @@ const App: React.FC = () => {
               }
             />
             <Route
+              path="/voxdbook/diet-planner"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <DietPlanner />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/day-planner"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <DayPlanner />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/goal-tracker"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <GoalTracker />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="/voxdbook/renewals"
               element={
                 <PrivateRoute>
@@ -334,6 +369,26 @@ const App: React.FC = () => {
                 <PrivateRoute>
                   <Layout>
                     <SmartReminders />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/notes"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <Notes />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/voxdbook/vehicle-management"
+              element={
+                <PrivateRoute>
+                  <Layout>
+                    <VehicleManagement />
                   </Layout>
                 </PrivateRoute>
               }

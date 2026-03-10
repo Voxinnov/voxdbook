@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
     Plus,
     Search,
-    Pencil,
-    Trash2,
     Calendar,
     Clock,
     ChevronLeft,
@@ -233,10 +231,10 @@ const Reminders: React.FC = () => {
                                         onClick={() => setSelectedDate(dayDate)}
                                         onDoubleClick={() => handleOpenModal(null, dayDate)}
                                         className={`h-20 sm:h-24 p-1.5 flex flex-col cursor-pointer transition-all border rounded-lg ${isSelected
-                                                ? 'bg-pink-50 border-pink-200 shadow-sm'
-                                                : isToday
-                                                    ? 'bg-amber-50 border-amber-200 shadow-sm'
-                                                    : 'bg-white border-gray-100 hover:border-pink-200 hover:bg-gray-50'
+                                            ? 'bg-pink-50 border-pink-200 shadow-sm'
+                                            : isToday
+                                                ? 'bg-amber-50 border-amber-200 shadow-sm'
+                                                : 'bg-white border-gray-100 hover:border-pink-200 hover:bg-gray-50'
                                             }`}
                                     >
                                         <div className="flex justify-between items-start mb-1">

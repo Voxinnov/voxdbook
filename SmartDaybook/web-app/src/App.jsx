@@ -10,13 +10,15 @@ import Tasks from './pages/Tasks';
 import Todos from './pages/Todos';
 
 import Categories from './pages/Categories';
+import DietPlanner from './pages/DietPlanner/index';
+import DayPlanner from './pages/DayPlanner/index';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = React.useContext(AuthContext);
-  
+
   if (loading) return <div style={{ color: 'white', padding: '20px' }}>Loading session...</div>;
   if (!user) return <Navigate to="/login" />;
-  
+
   return children;
 };
 
@@ -27,7 +29,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
+
           <Route path="/" element={
             <ProtectedRoute>
               <AppLayout />
@@ -37,6 +39,8 @@ function App() {
             <Route path="transactions" element={<Transactions />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="todos" element={<Todos />} />
+            <Route path="diet-planner" element={<DietPlanner />} />
+            <Route path="day-planner" element={<DayPlanner />} />
             <Route path="categories" element={<Categories />} />
           </Route>
         </Routes>

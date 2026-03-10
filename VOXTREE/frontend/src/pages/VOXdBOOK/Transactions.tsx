@@ -271,32 +271,6 @@ const Transactions: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2 col-span-2">
-              <label className="text-sm font-semibold text-gray-700">Amount (₹)</label>
-              <input
-                type="number"
-                className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value={formData.amount}
-                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                placeholder="0.00"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-gray-700">Description</label>
-            <input
-              type="text"
-              className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="What was this for?"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-gray-700">Category</label>
               <div className="flex gap-2">
@@ -331,6 +305,32 @@ const Transactions: React.FC = () => {
                 required
               />
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2 col-span-2">
+              <label className="text-sm font-semibold text-gray-700">Amount (₹)</label>
+              <input
+                type="number"
+                className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                value={formData.amount}
+                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                placeholder="0.00"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-semibold text-gray-700">Description</label>
+            <input
+              type="text"
+              className="p-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="What was this for?"
+              required
+            />
           </div>
 
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
